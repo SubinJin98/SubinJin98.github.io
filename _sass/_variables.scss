@@ -27,8 +27,8 @@
   --yellow-100: #fff3bf;
 
   --body-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --body-font-size: 18px;
-  --body-line-height: 1.5;
+  --body-font-size: 14px;         // default 18px
+  --body-line-height: 2.0;        // default 1.5
   --body-color: var(--gray-700);
   --body-bg: #fff;
 
@@ -67,7 +67,7 @@
   }
 }
 
-$sm-width: 35.5rem;
-$md-width: 48rem;
-$lg-width: 64rem;
-$xl-width: 80rem;
+$sm-width: 35.5rem;       // default 35.5rem
+$md-width: 48rem;         // default 48rem
+$lg-width: 64rem;         // default 64rem
+$xl-width: 80rem;         // default 80rem
