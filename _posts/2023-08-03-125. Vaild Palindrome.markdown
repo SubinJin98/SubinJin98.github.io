@@ -1,0 +1,71 @@
+---
+layout: post
+title:  "125. Valid Palindrome"
+excerpt: "LeetCode 125. Valid Palindrome (문자열 조작)"
+date:   2023-08-03T5:04:00Z
+categories:
+    - codingtest
+tags:
+    - LeetCode
+    - StringManipulation
+
+---
+
+## ◽ 개요
+---
+### 알고리즘 유형
+문자열 조작(String Manipulation)
+
+### 난이도
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/valid-palindrome/>{: target="_blank"}
+<br/>
+
+### Description
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.  
+Given a string s, return true if it is a palindrome, or false otherwise.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+해당 문제는 입력받은 문자열이 거꾸로 뒤집어도 똑같은 문장(Palindrome, 회문)인지 판별하는 문제다.
+
+```python
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        # 전처리 - 소문자 변경
+        s = s.lower()                       # 입력받은 문자열을 소문자로 변경
+        d = []                              # 문자열 분리할 리스트 생성
+
+        # 전처리 - 특수문자 제거
+        for i in range(len(s)):             # 문자열 s에 대해
+            if s[i].isalnum():              # 각 요소가 영어/숫자/한국어라면(isalnum)
+                d.append(s[i])              # 리스트 d에 요소를 저장
+        
+        # 팰린드롬 확인하는 함수 생성
+        def check_palindrome(lst):
+            start, end = 0, len(lst)-1      # 시작값 0, 끝값 문자열 마지막 값으로 설정 
+            while start <= end:             # 시작값이 끝값보다 작거나 같을 때
+                if lst[start] != lst[end]:  # 리스트 내 index 검색 결과가 같지 않으면
+                    return False            # false 반환
+                else:                       # 그렇지 않다면(같다면)
+                    start += 1              # 시작값 + 1
+                    end -= 1                # 끝값 - 1
+            return True                     # 반복문을 빠져나올 때까지 모든 요소가 같다면 True 반환
+
+        return(check_palindrome(d))
+            
+```
+![result](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/5c54e3fc-c57b-4e86-aae6-c9818fe387c8)
+
+직전에 이진 탐색 문제만 계속 풀었더니  
+아직도 그 방법론에서 벗어나지 못한 모습...  
+풀면서도 쓸데없이 너무 복잡해지는거 아닌가 싶었다. 역시나 메모리를 너무 잡아먹는다  
+
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.
