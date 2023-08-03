@@ -36,6 +36,12 @@
   @import "syntax-dark";
 }
 
+@import url(//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
+.nanumgothiccoding * {
+ font-family: 'Nanum Gothic Coding', monospace;
+}
+
+
 // Sass for creating the swatches
 .colors {
   display: grid;
