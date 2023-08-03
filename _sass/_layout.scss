@@ -16,7 +16,7 @@
   padding-top: var(--spacer-2);
   padding-left: var(--spacer-2);
   padding-right: var(--spacer-2);
-  margin-left:  auto;
+  margin-left:  auto;        // default: margin-left:  auto; 
   margin-right: auto;
   min-height: 100vh;
 }
@@ -25,7 +25,7 @@
   display: flex;
   padding: var(--spacer);
   background: center / cover;
-  height: 100vh;
+  height: 100vh; 
 }
 
 footer {
@@ -38,7 +38,7 @@ footer {
     padding-top: var(--spacer-3);
     padding-left: var(--spacer-3);
     padding-right: var(--spacer-3);
-    margin-left: 25%;
+    margin-left: 25%;     // default 25%
   }
 
   .sidebar-left {
@@ -64,7 +64,7 @@ footer {
   }
 }
 
-@media (max-width: $md-width) {
+@media (max-width: 130rem) {                    // default : $md-width
   .content {
     width: 100%;                                // default width: 100%
   }
@@ -72,6 +72,6 @@ footer {
 
 @media (min-width: $md-width) and (max-width: $lg-width) {
   .content {
-    width: 100%;                                // default width: 75%
+    width: 75%;                                // default width: 75%
   }
 }

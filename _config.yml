@@ -57,3 +57,10 @@ author:
   name: Subin Jin
   url: https://github.com/SubinJin98/
   email: edun236@gmail.com
+
+# Conversion
+markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false

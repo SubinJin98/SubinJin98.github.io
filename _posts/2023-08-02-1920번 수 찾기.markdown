@@ -1,0 +1,67 @@
+---
+layout: post
+title:  "1920번:: 수 찾기"
+excerpt: "백준 1920번:: 수 찾기 (이분 탐색)"
+date:   2023-08-02T12:34:00Z
+categories:
+    - codingtest
+tags:
+    - Baekjoon
+    - BinarySearch
+
+---
+
+## ◽ 개요
+---
+### 알고리즘 유형
+이분 탐색(Binary Search)
+
+### 난이도
+Silver 4
+<br/><br/><br/>
+
+## ◽ 문제
+---
+> <https://www.acmicpc.net/problem/1920>{: target="_blank"}
+
+### 내용
+N개의 정수 A[1], A[2], …, A[N]이 주어져 있을 때, 이 안에 X라는 정수가 존재하는지 알아내는 프로그램을 작성하시오.
+
+### 입력
+첫째 줄에 자연수 N(1 ≤ N ≤ 100,000)이 주어진다. 다음 줄에는 N개의 정수 A[1], A[2], …, A[N]이 주어진다.  
+다음 줄에는 M(1 ≤ M ≤ 100,000)이 주어진다. 다음 줄에는 M개의 수들이 주어지는데, 이 수들이 A안에 존재하는지 알아내면 된다.  
+모든 정수의 범위는 -231 보다 크거나 같고 231보다 작다.
+
+### 출력
+M개의 줄에 답을 출력한다. 존재하면 1을, 존재하지 않으면 0을 출력한다.
+<br/><br/><br/>
+
+## ◽ 풀이
+---
+
+```python
+ncnt = int(input())
+a = list(map(int, input().split()))
+mcnt = int(input())
+m = list(map(int, input().split()))
+
+a.sort()
+
+def find(lst, target):
+    start, end = 0, len(lst)-1
+    while start <= end:
+        mid = (start+end) // 2
+        if lst[mid] == target:
+            return 1
+        elif lst[mid] < target:
+            start = mid + 1
+        elif lst[mid] > target:
+            end = mid - 1
+    return 0
+
+for i in range(mcnt):
+    print(find(a, m[i]))
+            
+```
+
+암기왕보다 조금 더 단순한 문제. 접근 방식이 거의 똑같아서 그리 어렵지 않았다.

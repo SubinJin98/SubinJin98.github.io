@@ -1,0 +1,82 @@
+---
+layout: post
+title:  "10816번:: 숫자 카드 2"
+excerpt: "백준 10816번:: 숫자 카드 2 (이분 탐색)"
+date:   2023-08-02T12:40:00Z
+categories:
+    - codingtest
+tags:
+    - Baekjoon
+    - BinarySearch
+
+---
+
+## ◽ 개요
+---
+### 알고리즘 유형
+이분 탐색(Binary Search)
+
+### 난이도
+Silver 4
+<br/><br/><br/>
+
+## ◽ 문제
+---
+> <https://www.acmicpc.net/problem/10816>{: target="_blank"}
+
+### 내용
+숫자 카드는 정수 하나가 적혀져 있는 카드이다. 상근이는 숫자 카드 N개를 가지고 있다.  
+정수 M개가 주어졌을 때, 이 수가 적혀있는 숫자 카드를 상근이가 몇 개 가지고 있는지 구하는 프로그램을 작성하시오.
+
+### 입력
+첫째 줄에 상근이가 가지고 있는 숫자 카드의 개수 N(1 ≤ N ≤ 500,000)이 주어진다.  
+둘째 줄에는 숫자 카드에 적혀있는 정수가 주어진다. 숫자 카드에 적혀있는 수는 -10,000,000보다 크거나 같고, 10,000,000보다 작거나 같다.
+셋째 줄에는 M(1 ≤ M ≤ 500,000)이 주어진다.  
+넷째 줄에는 상근이가 몇 개 가지고 있는 숫자 카드인지 구해야 할 M개의 정수가 주어지며, 이 수는 공백으로 구분되어져 있다.  
+이 수도 -10,000,000보다 크거나 같고, 10,000,000보다 작거나 같다.
+
+### 출력
+첫째 줄에 입력으로 주어진 M개의 수에 대해서, 각 수가 적힌 숫자 카드를 상근이가 몇 개 가지고 있는지를 공백으로 구분해 출력한다.
+<br/><br/><br/>
+
+## ◽ 풀이
+---
+
+```python
+card_cnt = int(input())
+card_no = list(map(int, input().split()))
+m_cnt = int(input())
+m = list(map(int, input().split()))
+
+# 중복 제거
+card_no_unq = set(card_no)
+card_no_unq = list(card_no_unq)
+card_no_unq.sort()
+
+# 리스트 중복 요소 카운트
+cnter = {}
+
+for i in card_no:
+    try: cnter[i] += 1
+    except: cnter[i] = 1
+
+def check(input, tgt):
+    start, end = 0, len(input)-1
+    while start <= end:
+        mid = (start+end) // 2
+        if input[mid] == tgt:
+            return cnter[tgt]
+        elif input[mid] < tgt:
+            start = mid + 1
+        elif input[mid] > tgt:
+            end = mid - 1
+    return 0
+
+for i in range(m_cnt):
+    print(check(card_no_unq, m[i]))
+            
+```
+
+배열 중복 요소 다뤄보는 데 의의를 뒀다.  
+try-expect 방식 정말 창의적이라고 생각함  
+아마 이거보다 훨씬 효율적인 코드를 짤 수 있겠지만…일단은 구현된 것으로 만족…ㅎㅎ
