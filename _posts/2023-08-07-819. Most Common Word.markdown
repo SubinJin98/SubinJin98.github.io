@@ -1,0 +1,93 @@
+---
+layout: post
+title:  "819. Most Common Word"
+excerpt: "LeetCode 819. Most Common Word (가장 흔한 단어)"
+date:   2023-08-07T1:10:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Hash Table
+    - String
+    - Counting
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+해시 테이블(Hash Table)  
+문자열 조작(String)  
+카운팅(Counting)  
+
+### 난이도
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/most-common-word/>{: target="_blank"}
+<br/>
+
+### Description
+Given a string `paragraph` and a string array of the banned words `banned`, return the *most frequent word that is not banned.*  
+It is **guaranteed** there is **at least one word** that is not banned, and that the answer is unique.  
+  
+The words in `paragraph` are **case-insensitive** and the answer should be returned in **lowercase**.  
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+
+```python
+class Solution:
+    def mostCommonWord(self, paragraph: str, banned: List[str]) -> str:
+        s = re.sub('[^\w]', ' ', paragraph)             # 문자열에서 단어가 아닌 요소를 공백으로 변환
+        s = s.lower()                                   # 소문자 변환
+        d = []
+
+        for i in s.split():                             # 문자열 슬라이싱
+            if i not in banned:                         # s 내 요소가 banned 리스트에 포함되지 않을 경우
+                d.append(i)                             # 해당 요소를 리스트 d에 추가
+        
+        # 리스트 중복 요소 카운트
+        counter = {}
+        for i in d:
+            try : counter[i] += 1
+            except : counter[i] = 1
+        
+        # 가장 큰 값 찾아서 키 출력
+        max_word = max(counter, key = counter.get)
+        
+        return max_word       
+```
+![result](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/2000b2e8-60da-4df4-8f3c-a70477420347)  
+
+re.sub, split 함수로 문자열 슬라이싱, 리스트 중복 요소 카운트 <- 배웠던 내용 이용해서 풀었다. 제법 뿌듯함  
+딕셔너리 키랑 값 다루는게 아직 좀 미숙하다. 익숙해질 때까지 여러 번 사용해봐야겠다.  
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 리스트 컴프리헨션, Counter 객체 사용**  
+
+```python
+def nostCommonWord(self, paragraph: str, banned: List[str]) -> str:
+    words = [word for word in re.sub(r'[^\w]',' ', paragraph)
+            .lower().split()
+            if word not in banned]
+    
+    counts = collections.Counter(words)
+    # 가장 흔하게 등장하는 단어의 첫 번째 인덱스 리턴
+    return counts.most_common(1)[0][0]
+```
+
+위 코드 마지막 문단은 `words`에서 가장 흔하게 등장하는 단어의 첫 번째 값을 `most_common(1)`으로 추출한다.  
+문제의 입력값에서는 `[('ball', 2)]`가 되며, 이 값의 `[0][0]`을 추출해서 최종적으로 첫 번째 인덱스의 키를 추출하게 된다.  
+이렇게 추출한 키인 `ball`은 가장 흔한 단어가 되므로, 이 값을 리턴한다.

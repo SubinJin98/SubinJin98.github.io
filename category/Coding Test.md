@@ -2,6 +2,6 @@
 
 layout: category
 
-title: codingtest
+title: Coding Test
 
 ---

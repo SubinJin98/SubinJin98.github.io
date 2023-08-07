@@ -1,0 +1,103 @@
+---
+layout: post
+title:  "344. Reverse String"
+excerpt: "LeetCode 344. Reverse String (문자열 뒤집기)"
+date:   2023-08-03T6:12:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Two Pointers
+    - String
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+투 포인터(Two Pointers)  
+문자열 조작(String)  
+
+### 난이도
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/reverse-string/>{: target="_blank"}
+<br/>
+
+### Description
+Write a function that reverses a string. The input string is given as an array of characters `s`.  
+You must do this by modifying the input array [in-place](https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%9E%90%EB%A6%AC_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98){: target="_blank"} with $O(1)$ extra memory.  
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+문자열을 뒤집는 함수를 작성하는 문제. 입력값은 문자 배열이며, 리턴 없이 리스트 내부를 직접 조작해야 한다.  
+
+```python
+class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        """
+        Do not return anything, modify s in-place instead.
+        """
+        start, end = 0, len(s)-1                            # start, end 포인터 지정
+        while start <= end :                                # start가 end를 넘어서지 않게 조정
+            s[start], s[end] = s[end], s[start]             # 값 변경
+            start += 1                                      # start 위치 조정
+            end -= 1                                        # end 위치 조정
+```
+![result](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/0b30536e-41e0-409a-acf7-31ab387c1b92)
+
+사실 Deque를 어떻게 잘 써보고 싶었는데, 데크 생성하면 in-place 개념을 바로 충족하지 못하게 되는 것 같아서 그냥 원래 풀던 방법대로 풀었다.  
+(시도하다가 계속 오류가 나서 포기한 것도 있다)  
+간단하고 결과도 나쁘지 않다.  
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 투 포인터를 이용한 스왑**  
+
+```python
+def reverseString(self, s: List[str]) -> None:
+    left, right = 0, len(s)-1                            # 투 포인터 지정
+    while left < right :                                 # left가 right를 넘어서지 않게 조정
+        s[left], s[right] = s[right], s[left]            # 값 변경
+        left += 1                                        # left 위치 조정
+        right -= 1                                       # right 위치 조정         
+```
+
+문제가 베이직해서 그런가... 교재 풀이와 내 풀이가 똑같아서 좀 놀랐다.  
+사실 이 방법이 정석이긴 하다. 인덱스 지정해서 값 서로 바꾸는걸 스왑이라고 멋지게 표현할 수 있다는걸 배움  
+<br/>
+
+**2. 파이썬다운 방식**  
+
+파이썬의 기본 기능을 이용해서 쉽게 풀이하는 방식을 **파이썬다운 방식Pythonic way**이라고 한다.  
+입력값이 리스트로 제공되므로 다음과 같이 `reverse()` 함수를 사용하면 뒤집을 수 있다.
+
+```python
+def reverseString(self, s:list[str]) -> None:
+    s.reverse()    
+```
+
+`reverse()`는 리스트에만 제공된다. 만약 입력값이 문자열이라면 앞서 살펴본 바와 같이 문자열 슬라이싱을 사용할 수 있다.  
+
+```python
+s = s[::-1]
+```
+
+그러나 리트코드에서 이렇게 풀면 오류가 발생한다고 한다. 원래는 `[::-1]`도 정상적으로 처리되어야 하지만 이 문제의 경우 처리되지 않는데,  
+이 문제는 공간 복잡도를 $O(1)$로 제한하다 보니 변수 할당을 처리하는 데 다소 제약이 있다.  
+이 때 다음과 같은 트릭을 사용하면 잘 동작한다고 한다.  
+
+ ```python
+s[:] = s[::-1]
+```
+이런 트릭은 쉽게 알아내기 어려우며, 실제 코딩 테스트 시에도 이 같은 문제가 발생하면 디버깅이 어려우므로 플랫폼 특징을 잘 숙지해야 한다.  

@@ -4,7 +4,7 @@ title:  "18870번:: 좌표 압축"
 excerpt: "백준 18870번:: 좌표 압축 (이분 탐색)"
 date:   2023-08-02T12:44:00Z
 categories:
-    - codingtest
+    - Coding Test
 tags:
     - Baekjoon
     - BinarySearch

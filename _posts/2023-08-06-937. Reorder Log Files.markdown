@@ -1,0 +1,116 @@
+---
+layout: post
+title:  "937. Reorder Log Files"
+excerpt: "LeetCode 937. Reorder Log Files (로그 파일 재정렬)"
+date:   2023-08-06T1:12:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Array
+    - String
+    - Sorting
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+배열(Array)  
+문자열 조작(String)  
+정렬(Sorting)
+
+### 난이도
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/reorder-data-in-log-files/>{: target="_blank"}
+<br/>
+
+### Description
+You are given an array of logs. Each log is a space-delimited string of words, where the first word is the identifier.  
+  
+There are two types of logs:  
+  
+Letter-logs: All words (except the identifier) consist of lowercase English letters.  
+Digit-logs: All words (except the identifier) consist of digits.  
+Reorder these logs so that:  
+  
+The letter-logs come before all digit-logs.  
+The letter-logs are sorted lexicographically by their contents. If their contents are the same, then sort them lexicographically by their identifiers.  
+The digit-logs maintain their relative ordering.  
+Return the final order of the logs.  
+  
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+문자와 숫자 순서대로 로그를 재정렬하는 문제.  
+
+```python
+class Solution:
+    def reorderLogFiles(self, logs: List[str]) -> List[str]:
+        d = []
+        d_str = []
+        list_str = []
+        list_int = []
+
+        for i in range(len(logs)):
+            d.append(logs[i].split(" "))        # 문자열 슬라이싱 후 리스트 생성 (2차원 배열)
+
+        for i in range(len(d)):
+            if d[i][1].isdigit():               # 문자열로 만든 리스트의 2번째 요소가 숫자인지 아닌지 판별
+                list_int.append(logs[i])        # 숫자일 경우 기존 리스트를 list_int에 투입
+            else:
+                list_str.append(logs[i])        # 문자일 경우 기존 리스트를 list_str에 투입하고
+                d_str.append(d[i])              # 새로 만든 2차원 리스트를 d_str에 투입
+        
+        for i in range(1, len(list_str)):
+            j = i
+            while j > 1 and d_str[j][1] < d_str[j-1][1]:
+                d_str[j], d_str[j-1] = d_str[j-1], d_str[j]
+                list_str[j], list_str[j-1] = list_str[j-1], list_str[j]
+                j -= 1
+        return list_str                         # 삽입 정렬로 정렬하려 했는데 뭔가 문제가 있음....
+                        
+        d_sum = list_str + d_int                # 리스트 병합
+        
+        return d_sum       
+```
+
+문자랑 숫자를 나눠 리스트를 만든 다음 삽입 정렬 알고리즘으로 문자 리스트를 정렬하려 했는데,  
+수많은 삽질 끝에... 해당 방식으로 접근이 어려울 것 같아 답을 참고했다.  
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 람다와 + 연산자를 이용**  
+
+```python
+def reorderLogFiles(self, logs: List[str]) -> List[str]:
+    letters, digits = [], []
+    for log in logs:
+        if log.split()[1].isdigit():
+            digits.append(log)
+        else:
+            letters.append(log)
+
+    # 2개의 키를 람다 표현식으로 정렬
+    letters.sort(key = lambda x: (x.split()[1:], x.split()[0]))
+    # 식별자를 제외한 문자열 [1:]을 키로 하여 정렬하며, 동일한 경우 후순위로 식별자 [0]을 지정해 정렬
+    return letters + digits
+```
+
+너무 깔끔하다...  
+일단 숫자와 문자를 분리하는 것까진 괜찮은 접근이었던 듯하다.  
+다만 문자열의 각 요소를 담은 리스트를 새로 만들 필요 없이, list.split()[1] 방식으로 리스트 내 요소를 분리한 후 요소별로 슬라이싱할 수 있다.  
+문자열 리스트를 정렬할 때도 거창하게 정렬 알고리즘 가져올 필요 없이 그냥 sort + 람다 표현식으로 깔끔하게 처리 가능하다.  
+기억해놔야겠음...  
