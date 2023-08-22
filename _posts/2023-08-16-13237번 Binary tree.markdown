@@ -1,0 +1,69 @@
+---
+layout: post
+title:  "13237번:: Binary tree"
+excerpt: "백준 13237번:: Binary tree (이진 트리)"
+date:   2023-08-16T2:07:00Z
+categories:
+    - Coding Test
+tags:
+    - Baekjoon
+    - Graph theory
+    - Tree
+    - DFS
+use_math: true
+---
+
+## ◽ 개요
+---
+### 알고리즘 유형
+그래프 이론(Graph)  
+트리(Tree)  
+깊이 우선 탐색(DFS)  
+
+### 난이도
+Silver 3
+<br/><br/><br/>
+
+## ◽ 문제
+---
+> <https://www.acmicpc.net/problem/13237>{: target="_blank"}
+
+### 내용
+A binary tree is a mathematical structure made of nodes where each node can have up to two children nodes. One child node will be called left child and the other right child. ch If node B is a child node of A, then we say that A is the parent node of B. In a binary tree, there is only one node that has no parent and we call this node the root of the tree. We call the height of a node  N to the distance in nodes between the node N and the root node. The root node’s height is 0.  
+In this problem, you’ll have to compute the heights of every node of the tree. Each node will be identified by an integer from 1 to the number of nodes n.  
+
+### 입력
+The first line of the input will contain the number of nodes n. $(1 ≤ n ≤ 20)$  
+The following n lines will contain one integer each representing the parent of a node. That is, the second line of the input will contain the parent of node 1, the third line the parent of node 2, etc.  
+The root node will be identified by -1. Remember that node 1 won’t always be the root node.  
+
+### 출력
+Print n lines. The first line should be the height of node 1, the second should be the height of node 2, and so on.  
+<br/><br/><br/>
+
+## ◽ 풀이
+---
+
+```python
+n = int(input())
+lst = [0 for _ in range(n+1)]
+
+for i in range(n):
+    prt = int(input())
+    lst[i+1] = prt
+
+for i in range(n):
+    cnt = 0
+    a = lst[i+1]
+
+    if a == -1:
+        print(cnt)
+    else:
+        while a != -1:
+            a = lst[a]
+            cnt += 1
+        print(cnt)
+```
+
+이진 트리 탐색 문제.  
+원래 DFS로 푸는 게 정석이겠지만... 아직 잘 몰라서 그렇게 풀진 못했다. 대신 구글링을 통해 하나씩 탐색하는 방법을 배움  

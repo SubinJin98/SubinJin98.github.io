@@ -1,0 +1,151 @@
+---
+layout: post
+title:  "42. Trapping Rain Water"
+excerpt: "LeetCode 42. Trapping Rain Water (빗물 트래핑)"
+date:   2023-08-13T2:17:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Array
+    - Two Pointers
+    - Stack
+    - Dynamic Programming
+    - Monotonic Stack
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+배열(Array)  
+투 포인터(Two Pointers)  
+동적 프로그래밍(Dynamic Programming)  
+스택(Stack)  
+정렬된 스택(Monotonic Stack)  
+
+### 난이도
+Hard
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/trapping-rain-water/>{: target="_blank"}
+<br/>
+
+### Description
+Given `n` non-negative integers representing an elevation map where the width of each bar is `1`,  
+compute how much water it can trap after raining.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+높이를 계산해 쌓인 물의 양을 알아내는 문제.  
+
+- 잘못된 풀이
+
+```python
+for i in range(len(height)):
+    if height[max(0, i-1)] - height[i] > 0 and height[min(len(height)-1, i+1)] - height[i] > 0:
+        cnt += min(height[max(0, i-1)], height[min(len(height)-1, i+1)])
+print(cnt)
+```
+맨 처음 생각나는 대로 짜본 코드.  
+폭이 넓어지는 것을 인식하지 못해 풀리지 않는다.  
+<br/>
+
+- 재도전
+
+아직 스택 구현에 익숙하지 않아서 투 포인터를 활용해보기로 했다.  
+난이도 보고 예상했지만 삽질을 좀 많이 하다가...  
+검색을 통해 벽의 최대 높이를 lmax, rmax로 따로 받아서 접근하자는 아이디어를 얻었다.  
+
+```python
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        cnt = 0
+        left, right = 0, len(height)-1
+        lmax, rmax = height[left], height[right]
+        
+        while left < right:
+            if lmax < rmax:
+                left += 1
+                lmax = max(lmax, height[left])
+                cnt += lmax - height[left]
+            else:
+                right -= 1
+                rmax = max(rmax, height[right])
+                cnt += rmax - height[right]
+        
+        return cnt
+```
+
+![trapping](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/3ea7d24c-f93e-4462-b269-46f6a4a5a6b3)  
+스스로 풀었다기엔 좀 무리가 있음... 나중에 다시 풀어봐야겠다  
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 투 포인터를 최대로 이동**  
+
+```python
+def trap(self, height: List[int]) -> int:
+    if not height:
+        return 0
+
+    volume = 0
+    left, right = 0, len(height)-1
+    left_max, right_max = height[left], height[right]
+        
+    while left < right:
+        left_max, right_max = max(height[left], left_max), max(height[right], right_max)
+        # 더 높은 쪽을 향해 투 포인터 이동
+        if left_max <= right_max:
+            volume += left_max - height[left]
+            left += 1
+        else:
+            volume += right_max - height[right]
+            right -= 1
+    return volume
+```
+
+포인터들은 더 높은 쪽으로 계속 이동하며, 최대 높이의 막대까지 각각 좌우 기둥 최대 높이 `left_max`, `right_max`가  
+현재 높이와의 차이만큼 물 높이 `volume`을 더해 나간다. 이렇게 가다 보면 최대 지점에서 좌우 포인터가 서로 만나게 된다.  
+
+<br/>
+
+**2. 스택 쌓기**  
+
+```python
+def trap(self, height: List[int]) -> int:
+    stack = []
+    volume = 0
+
+    for i in range(len(height)):
+        # 변곡점을 만나는 경우
+        while stack and height[i] > height[stack[i]]: # 스택이 비어있지 않고, 현재 인덱스의 높이가 스택의 맨 위 인덱스의 높이보다 높은 경우
+            # 스택에서 꺼낸다
+            top = stack.pop()
+
+            if not len(stack):
+                break
+            
+            # 이전과의 차이만큼 물 높이 처리
+            distance = i - stack[-1] - 1              # 이전 인덱스와 현재 인덱스의 차이 계산
+            waters = min(height[i], height[stack[i]]) - height[top] # 현재 인덱스와 이전 인덱스 중 작은 높이에서 현재 인덱스의 높이를 뺀 값 계산
+
+            volume += distance * waters               # 이전 인덱스와 현재 인덱스 사이의 거리와 물의 높이를 곱한 값을 물의 부피에 더함
+        
+        stack.append(i)                               # 현재 인덱스를 스택에 추가
+    return volume
+```
+
+스택에 쌓아 나가면서 현재 높이가 이전 높이보다 높을 때, 즉 꺾이는 부분 변곡점Inflection Point을 기준으로 격차만큼 물 높이를 채운다.  
+이전 높이는 고정된 형태가 아니므로, 계속 스택으로 채워 나가다가 변곡점을 만날 때마다 스택에서 하나씩 꺼내면서 이전과의 차이만큼 물 높이를 채워 나간다.  
+

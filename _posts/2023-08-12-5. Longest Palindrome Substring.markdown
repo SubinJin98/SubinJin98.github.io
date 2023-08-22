@@ -1,0 +1,103 @@
+---
+layout: post
+title:  "5. Longest Palindrome Substring"
+excerpt: "LeetCode 5. Longest Palindrome Substring (가장 긴 팰린드롬 부분 문자열)"
+date:   2023-08-12T1:15:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - String
+    - Dynamic Programming
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+문자열 조작(String)  
+동적 프로그래밍(Dynamic Programming)  
+
+### 난이도
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/longest-palindromic-substring/>{: target="_blank"}
+<br/>
+
+### Description
+Given a string `s`, return the longest palindromic substring in `s`.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+가장 긴 팰린드롬 부분 문자열을 출력하는 문제.  
+
+- 잘못된 풀이
+
+```python
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        from collections import deque
+        
+        dq = deque(s)
+        result = []
+        
+        while len(dq) > 1:
+            left, right = dq.popleft(), dq.pop()
+            if left == right:
+                result.insert(0, left)
+                result.append(right)
+                
+        mid = len(result) // 2
+        if len(dq) == 1:
+            result.insert(mid, dq.pop())
+        
+        if len(result) == 0:
+            result.append(s[0])
+        
+        result = "".join(result)
+        
+        return result
+```
+문자열의 끝부터 출력하는 방식으로 접근해봤는데, 예외처리해야하는 경우가 너무 많다...  
+여기서 조건문 더 늘리면 큰일날 것 같아서 포기했다.  
+
+* 다이나믹 프로그래밍(DP) : 재귀함수를 이용한 동적 연산으로 생각하면 될 듯. 피보나치 수열 같은 문제에서 자주 쓰인다.
+
+
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 중앙을 중심으로 확장하는 풀이**  
+
+```python
+def longestPalindrome(self, s: str) -> str:
+    # 팰린드롬 판별 및 투 포인터 확장
+    def expand(left: int, right: int) -> str:
+        while left >= 0 and right <= len(s) and s[left] == s[right - 1]:
+            left -= 1
+            right += 1
+        return s[left + 1:right - 1]
+    
+    # 해당 상황이 없을 때 빠르게 리턴
+    if len(s) < 2 or s == s[::-1]:
+        return s
+    result = ''
+    # 슬라이딩 윈도우 우측으로 이동
+    for i in range(len(s)-1):
+        result = max(result, expand(i, i+1), expand(i, i+2), key = len)
+    return result
+```
+
+`expand()`로 정의한 중첩 함수에서 홀수, 짝수 2개의 투 포인터가 팰린드롬 여부를 판별하면서 슬라이딩 윈도우처럼 계속 우측으로 이동한다.  
+이렇게 판별한 최댓값이 최종 결과가 된다.

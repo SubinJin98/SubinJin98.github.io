@@ -78,7 +78,7 @@ re.sub, split 함수로 문자열 슬라이싱, 리스트 중복 요소 카운�
 **1. 리스트 컴프리헨션, Counter 객체 사용**  
 
 ```python
-def nostCommonWord(self, paragraph: str, banned: List[str]) -> str:
+def MostCommonWord(self, paragraph: str, banned: List[str]) -> str:
     words = [word for word in re.sub(r'[^\w]',' ', paragraph)
             .lower().split()
             if word not in banned]

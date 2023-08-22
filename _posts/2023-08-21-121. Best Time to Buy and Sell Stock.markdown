@@ -1,0 +1,98 @@
+---
+layout: post
+title:  "121. Best Time to Buy and Sell Stock"
+excerpt: "LeetCode 121. Best Time to Buy and Sell Stock (주식을 사고팔기 가장 좋은 시점)"
+date:   2023-08-21T3:15:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Array
+    - Dynamic Programming
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+배열(Array)  
+동적 프로그래밍(Dynamic Programming)  
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/best-time-to-buy-and-sell-stock/>{: target="_blank"}
+<br/>
+
+### Description
+You are given an array `prices` where `prices[i]` is the price of a given stock on the `ith` day.  
+You want to maximize your profit by choosing a **single day** to buy one stock and choosing a **different day in the future** to sell that stock.  
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return `0`.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+한 번의 거래로 낼 수 있는 최대 이익을 산출하라.  
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        profit = 0                                              # 얻을 수 있는 이익 정의
+        min_price = prices[0]                                   # 최저 가격 계산. 배열 첫 번째 요소에서 시작
+        
+        for i in range(len(prices)):
+            min_price = min(prices[i], min_price)               # 반복문을 통해 최저 가격 비교
+            if prices[i] > min_price:                           # 현가가 최저가보다 크면
+                profit = max(profit, prices[i] - min_price)     # 이익 산출-이전의 이익보다 클 때 업데이트
+        
+        return profit
+```
+![profit](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/e387c8ab-d3de-473c-a101-5be783f6c54f)
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 브루트 포스로 계산**  
+
+```python
+def maxProfit(self, prices: List[int]) -> int:
+        max_price = 0
+        
+        for i, price in enumerate(prices):
+            for j in range(i, len(prices)):
+                max_price = max(prices[j] - price, max_price)
+        
+        return max_price
+```
+무식하게 사고팔고를 반복하는 방법.  
+틀린 풀이는 아니겠지만, 시간복잡도 때문에 통과되지 않는다.  
+
+<br/>
+
+**2. 저점과 현재 값과의 차이 계산**  
+<br/>
+
+```python
+def maxProfit(self, prices: List[int]) -> int:
+    profit = 0
+    min_price = sys.maxsize
+
+    # 최솟값과 최댓값을 계속 갱신
+    for price in prices:
+        min_price = min(min_price, price)
+        profit = max(profit, price - min_price)
+    
+    return profit
+```
+
+sys.maxsize는 시스템의 최대 정수값인데, 이런 식으로 최솟값 변수는 최댓값으로 정하는 게 좋다. 그래야 어떤 값이 들어오든 바로 교체될 수 있기 때문이다.  
+위에서 쓰인 알고리즘은 [카데인 알고리즘Kadane's Algorithm](https://sustainable-dev.tistory.com/23){: target="_blank"}이라는 방법이라고 한다.  

@@ -1,0 +1,174 @@
+---
+layout: post
+title:  "15. 3Sum"
+excerpt: "LeetCode 15. 3Sum (세 수의 합)"
+date:   2023-08-20T1:17:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Array
+    - Two Pointers
+    - Sorting
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+배열(Array)  
+투 포인터(Two Pointers)  
+정렬(Sorting)
+
+### 난이도
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/3Sum/>{: target="_blank"}
+<br/>
+
+### Description
+Given an integer array nums, return all the triplets nums[i], nums[j], nums[k] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.  
+Notice that the solution set must not contain duplicate triplets.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+배열을 입력받아 합으로 0을 만들 수 있는 3개의 엘리먼트를 출력하라.  
+
+- 풀이 1
+
+```python
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        res = []
+        
+        for i in range(len(nums)):
+            left, right = i + 1, len(nums)-1
+            while left < right:
+                if nums[i] + nums[left] + nums[right] == 0:
+                    res.append([nums[i], nums[left], nums[right]])
+                    left += 1
+                    right -= 1
+                elif nums[i] + nums[left] + nums[right] > 0:
+                    right -= 1
+                elif nums[i] + nums[left] + nums[right] < 0:
+                    left += 1
+
+        result = []
+        
+        for sublist in res:
+            if sublist not in result:
+                result.append(sublist)
+        
+        return result
+```
+![3sum_1](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/2978ab1a-1a58-4a11-a5c6-e91fffbe2677)
+
+처음으로 풀었던 코드. 포인터 3개가 필요해서, for문 + 투 포인터로 접근했다.  
+리스트를 썼더니 중복값 이슈가 발생해서 중복 제거용 배열 하나 더 추가했다. 결과가 영 좋지 않다.
+<br/>
+
+- 풀이 2
+
+```python
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        res = set()
+        
+        for i in range(len(nums)):
+            left, right = i + 1, len(nums)-1
+            while left < right:
+                if nums[i] + nums[left] + nums[right] == 0:
+                    res.add((nums[i], nums[left], nums[right]))
+                    left += 1
+                    right -= 1
+                elif nums[i] + nums[left] + nums[right] > 0:
+                    right -= 1
+                elif nums[i] + nums[left] + nums[right] < 0:
+                    left += 1
+                
+        res = list(res)
+        return res
+```
+
+![3sum_2](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/63a92e11-67f9-4aa3-98cf-3ab600463830)
+
+중복 제거 부분을 좀 고칠 수 있을 것 같아서 검색하다가 set 자료형을 쓰면 된다는 내용을 발견했다.  
+메모리 면에서 훨씬 개선된 결과를 얻을 수 있었다.  
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 브루트 포스로 계산**  
+
+```python
+def threeSum(self, nums: List[int]) -> List[List[int]]:
+       results = []
+       nums.sort()
+
+       # 브루트 포스 n^3 반복
+       for i in range(len(nums) - 2):
+        # 중복된 값 건너뛰기
+        if i > 0 and nums[i] == nums[i-1]:
+            continue
+        for j in range(i + 1, len(nums)-1):
+            if j > i + 1 and nums[j] == nums[j-1]:
+                continue
+            for k in range(j + 1, len(nums)):
+                if k > j + 1 and nums[k] == nums[k-1]:
+                    continue
+                if nums[i] + nums[j] + nums[k] == 0:
+                    results.append((nums[i], nums[j], nums[k]))
+```
+2Sum 문제의 브루트 포스 접근방식과 동일하다.  
+틀린 부분은 없지만 시간복잡도 문제로 인해 이 방식으로는 문제가 풀리지 않는다.  
+
+<br/>
+
+**2. 투 포인터로 합 계산**  
+
+```python
+def threeSum(self, nums: List[int]) -> List[List[int]]:
+       results = []
+       nums.sort()
+
+       # 브루트 포스 n^3 반복
+       for i in range(len(nums) - 2):
+        # 중복된 값 건너뛰기
+        if i > 0 and nums[i] == nums[i-1]:
+            continue
+
+        # 간격을 좁혀가며 합 sum 계산
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            sum = nums[i] + nums[left] + nums[right]
+            if sum < 0:
+                left += 1
+            elif sum > 0:
+                right -= 1
+            else:
+                # sum = 0인 경우이므로 정답 및 스킵 처리
+                results.append((nums[i], nums[left], nums[right]))
+
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1
+                left += 1
+                right -= 1
+    
+    return results
+```
+
+for문과 투 포인터를 이용한 해답.  

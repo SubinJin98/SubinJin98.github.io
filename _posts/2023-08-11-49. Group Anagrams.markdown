@@ -1,0 +1,88 @@
+---
+layout: post
+title:  "49. Group Anagrams"
+excerpt: "LeetCode 49. Group Anagrams (그룹 애너그램)"
+date:   2023-08-11T1:10:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Hash Table
+    - String
+    - Sorting
+    - Array
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+배열(Array)  
+해시 테이블(Hash Table)  
+문자열 조작(String)  
+정렬(Sorting)  
+
+### 난이도
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/group-anagrams/>{: target="_blank"}
+<br/>
+
+### Description
+Given an array of strings $strs$, group **the anagrams** together. You can return the answer in **any order**.
+
+An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+문자열 배열을 받아 애너그램 단위로 그룹핑하는 문제.  
+두 가지 방법으로 접근 가능하지 않을까 싶었다.  
+- 리스트 내 각 문자열 요소를 하나씩 추출해서 대조  
+- 문자열 정렬 후 딕셔너리로 분류  
+<br/>
+첫 번째 방법은 대충 생각해도 복잡해질 것 같음... Related Topics에도 Sorting 태그가 있으니 문자열 정렬 쪽으로 접근해보기로 했다.  
+
+```python
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        result = {}                                 # 분류할 딕셔너리 생성
+        
+        for str in strs:                            # 리스트 내 요소들에 대해
+            srted_str = "".join(sorted(str))        # 정렬하고 문자열로 다시 합침
+            if srted_str in result:                 # 정렬한 문자열이 result 딕셔너리에 있으면
+                result[srted_str] += [str]          # 해당 키에 문자열 원본을 값으로 추가
+            else:                                   # 없으면
+                result[srted_str] = [str]           # 새로운 키-값 추가
+        
+        return result.values()                      # 값들만 리턴
+```
+![group_anagrams](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/5847b26e-b000-4fae-973a-162ecd7b6151)
+
+딕셔너리 구문이라 반사적으로 try-expect 열심히 넣다가... 문득 그럴 필요가 없다는 걸 깨달음  
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 정렬하여 딕셔너리에 추가**  
+
+```python
+def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+    anagrams = collections.defaultdict(list)
+
+    for word in strs:
+        # 정렬하여 딕셔너리에 추가
+        anagrams[''.join(sorted(word))].append(word)
+    return anagrams.values()
+```
+
+위 풀이에서는 존재하지 않는 키를 if문으로 처리하는 대신 defaultdict() 자료형을 선언해 보다 간결하게 구성했다.
