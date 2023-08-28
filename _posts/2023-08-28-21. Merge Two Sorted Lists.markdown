@@ -1,0 +1,84 @@
+---
+layout: post
+title:  "21. Merge Two Sorted Lists"
+excerpt: "LeetCode 21. Merge Two Sorted Lists (두 정렬 리스트의 병합)"
+date:   2023-08-28T1:48:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Linked List
+    - Recursion
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+연결된 리스트(Linked List)   
+재귀(Recursion)  
+
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/merge-two-sorted-lists/>{: target="_blank"}
+<br/>
+
+### Description
+You are given the heads of two sorted linked lists list1 and list2.  
+Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.  
+Return the head of the merged linked list.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+정렬되어 있는 두 연결 리스트를 하나로 합치는 문제.  
+
+```python
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        cur = res = ListNode()                          # 리스트노드 cur = res 생성
+                                                        # cur은 계속 움직이기 때문에 모든 값을 저장할 연결리스트 하나 더 필요
+        while list1 and list2:                          # list1 노드와 list2 노드 모두 있을 때
+            if list1.val < list2.val:                   # list1 노드가 list2 노드보다 작다면
+                cur.next = ListNode(list1.val)          # cur의 다음 노드는 list1 값으로 지정 (res에도 자동으로 들어감)
+                list1, cur = list1.next, cur.next       # list1과 cur 넘김
+            else:                                       # list1 노드가 list2 노드보다 크거나 같다면
+                cur.next = ListNode(list2.val)          # cur의 다음 노드는 list2 값으로 지정
+                list2, cur = list2.next, cur.next       # list2와 cur 넘김
+        
+        while list1 or list2:                           # list1과 list2 중 하나만 노드가 남아있을 때
+            if list1 and not list2:                     # list1만 있다면
+                cur.next = list1                        # cur의 다음 노드부터 list1의 남은 값 전부 저장하고
+                break                                   # 반복 종료
+            if list2 and not list1:                     # list2만 있다면
+                cur.next = list2                        # list2의 남은 값 전부 저장하고
+                break                                   # 반복 종료
+        
+        return res.next                                 # res 첫 값은 0이므로 다음 값부터 출력
+```
+![merge](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/246ca1a2-5796-42e9-a5dc-958b4e9ecea1)  
+이 문제로 연결리스트 좀 제대로 연습한 것 같다. 굿  
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 재귀 구조로 연결**  
+
+```python
+def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+    if (not list1) or (list2 and list1.val > list2.val):        # l1 노드가 없거나 l2 노드가 l1 노드보다 작을 경우
+        list1, list2 = list2, list1                             # l1과 l2를 스왑함
+    if list1:                                                   # l1 노드가 있다면
+        list1.next = self.mergeTwoLists(list1.next, list2)      # l1에 다음 값이 엮이도록 재귀호출
+    return list1                                                # 끝까지 돈 다음 l1을 출력함
+```

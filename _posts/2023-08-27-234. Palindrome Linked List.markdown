@@ -1,0 +1,139 @@
+---
+layout: post
+title:  "234. Palindrome Linked List"
+excerpt: "LeetCode 234. Palindrome Linked List (팰린드롬 연결 리스트)"
+date:   2023-08-27T1:07:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Linked List
+    - Two Pointers
+    - Stack
+    - Recursion
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+연결된 리스트(Linked List)  
+투 포인터(Two Pointers)  
+스택(Stack)  
+재귀(Recursion)
+
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/palindrome-linked-list/>{: target="_blank"}
+<br/>
+
+### Description
+Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+연결 리스트가 팰린드롬인지 판별하는 문제.  
+- 연결 리스트 : 배열과 함께 가장 기본이 되는 대표적인 선형 자료구조 중 하나. 데이터 순서가 메모리에 물리적인 순서대로 저장되지는 않는다. 배열과 달리 특정 인덱스에 접근하기 위해서는 전체를 순서대로 읽어야 하므로 $O(n)$이 소요된다. 반면, 시작 또는 끝 지점에 아이템을 추가하거나 삭제, 추출하는 작업은 $O(1)$에 가능하다.  
+
+```python
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        lst = []                    # 일반 리스트 생성
+        node = head                 # 연결 리스트의 노드 지정
+
+        while node:                 # 연결 리스트의 노드를 하나씩 순회
+            lst.append(node.val)    # 노드의 값을 일반 리스트에 추가
+            node = node.next        # 다음 노드로 이동
+
+        return lst == lst[::-1]     # 팰린드롬 여부 판별
+```
+![linked_lst](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/3102b811-73cc-422e-8112-5494cccaedce)  
+연결 리스트의 정의와 사용법을 알고 있다면 쉽게 풀리는 문제.  
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 리스트 변환**  
+
+```python
+def isPalindrome(self, head: Optional[ListNode]) -> bool:
+    q: List = []
+
+    if not head:
+        return True
+    
+    node = head
+    # 리스트 변환
+    while node is not None:
+        q.append(node.val)
+        node = node.next
+    
+    # 팰린드롬 판별
+    while len(q) > 1:
+        if q.pop(0) != q.pop():
+            return False
+    
+    return True
+```
+
+아이디어는 같은데 묘하게 더 복잡한 코드...아마 이렇게 짜면 메모리를 덜 잡아먹을 것 같긴 하다  
+
+**2. 데크를 이용한 최적화**  
+
+```python
+def isPalindrome(self, head: Optional[ListNode]) -> bool:
+    q: Deque = collections.deque()
+
+    if not head:
+        return True
+    
+    node = head
+    while node is not None:
+        q.append(node.val)
+        node = node.next
+
+    while len(q) > 1:
+        if q.popleft() != q.pop():
+            return False
+    
+    return True
+```
+
+이전에 살펴봤던 데크 자료형을 이용한 풀이법이다. 기본적인 형태는 동일하다.  
+
+**3. 런너를 이용한 풀이**  
+사실 이 문제의 제대로 된 풀이법은 **런너Runner** 기법을 활용하는 것이라고 한다.  
+두 칸씩 이동하는 빠른 런너Fast Runner와 한 칸씩 이동하는 느린 런너Slow Runner를 생성한다.
+실행 순서에 따라 빠른 런너와 느린 런너를 각각 출발시키면, 빠른 런너가 끝에 다다를 때 느린 런너는 정확히 중간 지점에 도달한다.  
+느린 런너는 중간까지 이동하면서 역순으로 연결 리스트 `rev`를 만들어 나간다.  
+이제 중간에 도달한 느린 런너가 나머지 경로를 이동할 때, 역순으로 만든 연결 리스트의 값들과 일치하는지 확인해나가면 된다.  
+
+```python
+def isPalindrome(self, head: Optional[ListNode]) -> bool:
+    rev = None
+    slow = fast = head
+    # 런너를 이용해 역순 연결 리스트(rev) 구성
+    while fast and fast.next:                       # fast의 현재 노드와 다음 노드가 존재할 때
+        fast = fast.next.next                       # fast를 두 칸씩 이동시키고
+        rev, rev.next, slow = slow, rev, slow.next  # 역순 리스트 rev 생성
+    if fast:                                        # fast의 다음 노드가 없는데 현재 노드가 False가 아니라면,
+        slow = slow.next                            # 연결 리스트의 길이가 홀수이므로 slow를 한 칸 더 이동시킴
+    
+    # 팰린드롬 여부 확인
+    while rev and rev.val == slow.val:              # rev 노드가 존재하고 rev 값과 slow 값이 같다면
+        slow, rev = slow.next, rev.next             # 다음 노드로 이동
+    return not rev                                  # 이후 결과값 반환 (while문을 끝까지 다 돌았다면 true, 아니면 false)
+```
+
+

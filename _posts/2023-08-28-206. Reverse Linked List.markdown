@@ -1,0 +1,98 @@
+---
+layout: post
+title:  "206. Reverse Linked List"
+excerpt: "LeetCode 206. Reverse Linked List (역순 연결 리스트)"
+date:   2023-08-28T3:07:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Linked List
+    - Recursion
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+연결된 리스트(Linked List)   
+재귀(Recursion)  
+
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/reverse-linked-list/>{: target="_blank"}
+<br/>
+
+### Description
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+연결 리스트를 뒤집어라.  
+
+```python
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        rev = None                  # 역순 연결 리스트 생성
+
+        while head:                 # head 노드가 있을 때
+            cur = head              # cur에 head의 현재 상태 저장
+            head = head.next        # head를 다음 노드로 업데이트
+            cur.next = rev          # cur의 다음 노드를 rev 값으로 업데이트
+            rev = cur               # rev를 현재 상태(cur)로 업데이트
+        return rev                  # head가 None일 때 rev 출력
+```
+![reverse](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/396bd013-81b4-41a0-8f13-26d791a4933a)  
+푼 것에 의의를 두기로 함... 개인적으로 이 문제 너무 헷갈렸다.  
+코드만 보면 이해가 잘 안 가는데 단계별로 따라가면 어떤 원리인지 알 수 있다.  
+<br/>
+![rev_explain](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/210a1d62-756c-4cb8-912f-344286757b58)  
+이런 식으로 끝까지 반복된다.  
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 재귀 구조로 뒤집기**  
+
+```python
+def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    def reverse(node: ListNode, prev: ListNode = None):
+        if not node:
+            return prev
+        next, node.next = node.next, prev
+        return reverse(next, node)
+    
+    return reverse(head)
+```
+
+다음 노드 next와 현재 노드 node를 파라미터로 지정한 함수를 계속해서 재귀 호출한다.  
+node.next에는 이전 prev 리스트를 계속 연결해주면서 node가 None이 될 때까지 재귀 호출하면 마지막에는 백트래킹되면서 연결 리스트가 거꾸로 연결된다.  
+여기서 맨 처음에 리턴된 prev는 뒤집힌 연결 리스트의 첫 번째 노드가 된다.  
+
+**2. 반복 구조로 뒤집기**  
+
+```python
+def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    node, prev = head, None
+
+    while node:
+        next, node.next = node.next, prev
+        prev, node = node, next
+    
+    return prev
+```
+
+마찬가지로, node.next를 이전 prev 리스트로 계속 연결하면서 끝날 때까지 반복한다.  
+node가 None이 될 때 prev는 뒤집힌 연결 리스트의 첫 번째 노드가 된다.  
+next, node.next = node.next, prev로 다중 할당하는 부분은 재귀나 반복 양쪽 모두 동일하다.
