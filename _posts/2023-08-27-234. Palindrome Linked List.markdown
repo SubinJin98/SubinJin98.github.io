@@ -88,6 +88,7 @@ def isPalindrome(self, head: Optional[ListNode]) -> bool:
 ```
 
 아이디어는 같은데 묘하게 더 복잡한 코드...아마 이렇게 짜면 메모리를 덜 잡아먹을 것 같긴 하다  
+<br/>
 
 **2. 데크를 이용한 최적화**  
 
@@ -111,6 +112,7 @@ def isPalindrome(self, head: Optional[ListNode]) -> bool:
 ```
 
 이전에 살펴봤던 데크 자료형을 이용한 풀이법이다. 기본적인 형태는 동일하다.  
+<br/>
 
 **3. 런너를 이용한 풀이**  
 사실 이 문제의 제대로 된 풀이법은 **런너Runner** 기법을 활용하는 것이라고 한다.  
