@@ -114,6 +114,7 @@ def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
 ```
 
 이전 풀이들과 달리 연결 리스트의 head를 가리키는 노드가 직접 바뀌는 풀이이므로 head를 리턴하지 못하고 그 이전 값을 root로 별도 설정한 다음 root.next를 리턴하게 했다.  
+![swaplist](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/f459ba16-4c40-4eb4-b3b8-a98294e5cf97)
 <br/>
 
 **3. 재귀 구조로 스왑**  
