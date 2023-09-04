@@ -1,0 +1,93 @@
+---
+layout: post
+title:  "328. Odd Even Linked List"
+excerpt: "LeetCode 328. Odd Even Linked List (홀짝 연결 리스트)"
+date:   2023-09-03T9:06:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Linked List
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+연결된 리스트(Linked List)   
+
+
+### 난이도 
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/odd-even-linked-list/>{: target="_blank"}
+<br/>
+
+### Description
+Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.  
+The first node is considered odd, and the second node is even, and so on.  
+Note that the relative order inside both the even and odd groups should remain as it was in the input.  
+You must solve the problem in O(1) extra space complexity and O(n) time complexity.  
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+연결 리스트를 홀수 노드 다음에 짝수 노드가 오도록 재구성하라. 공간 복잡도 $O(1)$, 시간 복잡도 $O(n)$에 풀이해야 한다.
+
+```python
+def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        res = ListNode()
+        cur = head
+
+        while cur:
+            if cur.val % 2 == 1:
+                odd = cur.val
+            else:
+                even = cur.val
+            cur = cur.next
+
+        while odd:
+            res.next = ListNode(odd)
+            res = res.next
+
+        while even:
+            res.next = ListNode(even)
+            res = res.next
+
+        return res 
+```
+odd랑 even 연결리스트 만들어서 합치려고 했는데 안된다...어려움
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 반복 구조로 홀짝 노드 처리**  
+
+```python
+def oddEvenList(self, head: ListNode) -> ListNode:
+    # 예외 처리
+    if head is None:
+        return None
+    
+    odd = head
+    even = head.next
+    even_head = head.next
+
+    # 반복하면서 홀짝 노드 처리
+    while even and even.next:
+        odd.next, even.next = odd.next.next, even.next.next
+        odd, even = odd.next, even.next
+    
+    # 홀수 노드의 마지막을 짝수 헤드로 연결
+    odd.next = even_head
+    return head
+```
+

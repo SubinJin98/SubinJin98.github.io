@@ -1,0 +1,147 @@
+---
+layout: post
+title:  "1260번:: DFS와 BFS"
+excerpt: "백준 1260번:: DFS와 BFS (그래프 이론)"
+date:   2023-08-30T1:48:00Z
+categories:
+    - Coding Test
+tags:
+    - Baekjoon
+    - Graph theory
+    - BFS
+    - DFS
+use_math: true
+---
+
+## ◽ 개요
+---
+### 알고리즘 유형
+그래프 이론(Graph theory)  
+너비 우선 탐색(BFS)  
+깊이 우선 탐색(DFS)  
+
+
+### 난이도
+Silver 2
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://www.acmicpc.net/problem/16173>{: target="_blank"}
+
+### 내용
+그래프를 DFS로 탐색한 결과와 BFS로 탐색한 결과를 출력하는 프로그램을 작성하시오.  
+단, 방문할 수 있는 정점이 여러 개인 경우에는 정점 번호가 작은 것을 먼저 방문하고, 더 이상 방문할 수 있는 점이 없는 경우 종료한다. 정점 번호는 1번부터 N번까지이다.  
+
+### 입력
+첫째 줄에 정점의 개수 N(1 ≤ N ≤ 1,000), 간선의 개수 M(1 ≤ M ≤ 10,000), 탐색을 시작할 정점의 번호 V가 주어진다.  
+다음 M개의 줄에는 간선이 연결하는 두 정점의 번호가 주어진다. 어떤 두 정점 사이에 여러 개의 간선이 있을 수 있다. 입력으로 주어지는 간선은 양방향이다.  
+
+### 출력
+첫째 줄에 DFS를 수행한 결과를, 그 다음 줄에는 BFS를 수행한 결과를 출력한다. V부터 방문된 점을 순서대로 출력하면 된다.
+<br/><br/><br/>
+
+## ◽ 풀이
+---
+- 1차 시도  
+
+```python
+n, m, v = map(int, input().split())
+
+# 인접 리스트 구현 - 딕셔너리와 세트 사용
+graph = {}
+for _ in range(m):                               # edge 갯수만큼 반복
+    x, y = map(int, input().split())             # node pair 인자로 받음
+    if x not in graph.keys():                    # x가 딕셔너리 키에 없을 경우
+        graph[x] = set([y])                      # 키 x와 값 y들의 집합 생성
+    else:                                        # 있을 경우
+        graph[x].add(y)                          # 값 집합에 새로운 y 추가
+    if y not in graph.keys():                    # 상동
+        graph[y] = set([x])
+    else:
+        graph[y].add(x)
+
+# DFS
+visited = {node: 0 for node in graph}            # 방문 여부 확인 (binary)
+
+def dfs(graph, node):
+    if visited[node] == 0:                       # 첫 방문일 경우
+        print(node, end = ' ')                   # 해당 노드 위치를 출력하고
+        visited[node] = 1                        # 방문했다고 표시해줌
+
+        for neighbor in graph[node]:             # node 키가 가진 값을 순회하며
+            dfs(graph, neighbor)                 # 재귀적으로 반복
+
+dfs(graph, v)                                    # dfs 값 출력. 한 줄로 표시됨
+print()                                          # 줄바꿈
+
+# BFS
+visited = {node: 0 for node in graph}            # 방문 여부 확인 딕셔너리 초기화
+
+from collections import deque
+
+def bfs(graph, start_node):
+    dq = deque([start_node])                     # 큐 생성
+
+    while dq:                                    # 큐 값이 존재할 때
+        node = dq.popleft()                      # FIFO로 노드 빼냄
+
+        if visited[node] == 0:                   # 첫 방문일 경우
+            print(node, end = ' ')               # 해당 노드 위치를 출력하고
+            visited[node] = 1                    # 방문했다고 표시해줌
+            dq.extend(graph[node])               # 해당 노드의 값들을 큐에 재삽입
+
+bfs(graph, v)
+```
+
+예제는 다 맞는데 틀렸다고 함…  
+
+- 2차 시도  
+아마 정렬 관련 문제이겠다 싶어서, 인접 리스트를 이중 리스트로 변경해서 구현했다.  
+
+```python
+n, m, v = map(int, input().split())
+
+# 인접 리스트 구현 - 이중 리스트 사용
+graph = [[] for _ in range(n+1)]
+for _ in range(m):                               # edge 갯수만큼 반복
+    x, y = map(int, input().split())             # node pair 인자로 받음
+    graph[x].append(y)                           # x 위치에 y 추가
+    graph[y].append(x)                           # y 위치에 x 추가
+
+for i in graph:                                  # 정렬
+    i.sort()
+
+# DFS
+visited = [0] * (n+1)                            # 방문 여부 확인 (binary)
+
+def dfs(graph, node):
+    if visited[node] == 0:                       # 첫 방문일 경우
+        print(node, end = ' ')                   # 해당 노드 위치를 출력하고
+        visited[node] = 1                        # 방문했다고 표시해줌
+
+        for neighbor in graph[node]:             # node 키가 가진 값을 순회하며
+            dfs(graph, neighbor)                 # 재귀적으로 반복
+
+dfs(graph, v)                                    # dfs 값 출력. 한 줄로 표시됨
+print()                                          # 줄바꿈
+
+# BFS
+visited = [0] * (n+1)                            # 방문 여부 확인 리스트 초기화
+
+from collections import deque
+
+def bfs(graph, start_node):
+    dq = deque([start_node])                     # 큐 생성
+
+    while dq:                                    # 큐 값이 존재할 때
+        node = dq.popleft()                      # FIFO로 노드 빼냄
+
+        if visited[node] == 0:                   # 첫 방문일 경우
+            print(node, end = ' ')               # 해당 노드 위치를 출력하고
+            visited[node] = 1                    # 방문했다고 표시해줌
+            dq.extend(graph[node])               # 해당 노드의 값들을 큐에 재삽입
+
+bfs(graph, v)
+```
+

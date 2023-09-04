@@ -1,0 +1,159 @@
+---
+layout: post
+title:  "2. Add Two Numbers"
+excerpt: "LeetCode 2. Add Two Numbers (두 수의 덧셈)"
+date:   2023-09-04T3:51:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Linked List
+    - Math
+    - Recursion
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+연결된 리스트(Linked List)   
+수학(Math)  
+재귀(Recursion)  
+
+
+### 난이도 
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/add-two-numbers/>{: target="_blank"}
+<br/>
+
+### Description
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.  
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+역순으로 저장된 연결 리스트의 숫자를 더하라.  
+
+```python
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        cur = res = ListNode()
+
+        while l1 and l2:
+            cur.next = ListNode(l1.val + l2.val)
+            cur = cur.next
+            l1, l2 = l1.next, l2.next
+        
+        while cur:
+            if cur.val > 9:
+                cur.val = cur.val - 10
+                cur.next.val = cur.next.val + 1
+                cur = cur.next
+            else:
+                cur = cur.next
+        
+        return res.next
+```
+각 노드의 값을 더해서 새로운 연결리스트 res에 저장하는 것까지는 성공했는데,  
+그 후 자릿수를 바꾸는 부분에서 계속 에러가 난다. 풀이에 실패해서 아래와 같이 교재를 참고했다.  
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 자료형 변환**  
+
+```python
+class Solution:
+    # 연결 리스트 뒤집기
+    def reverseList(self, head: ListNode) -> ListNode:
+        node, prev = head, None                     
+
+        while node:                                 
+            next, node.next = node.next, prev       
+            prev, node = node, next
+        
+        return prev
+    
+    # 연결 리스트를 파이썬 리스트로 변환
+    def toList(self, node: ListNode) -> ListNode:
+        list: List = []
+        while node:
+            list.append(node.val)
+            node = node.next
+
+        return list
+    
+    # 파이썬 리스트를 연결 리스트로 변환
+    def toReversedLinkedList(self, result: ListNode) -> ListNode:
+        prev: ListNode = None
+        for r in result:
+            node = ListNode(r)
+            node.next = prev
+            prev = node
+        
+        return node
+    
+    # 두 연결 리스트의 덧셈
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+        a = self.toList(self.reverseList(l1))
+        b = self.toList(self.reverseList(l2))
+
+        resultStr = int(''.join(str(e) for e in a)) + int(''.join(str(e) for e in b))
+
+        # 최종 계산 결과 연결 리스트 변환
+        return self.toReversedLinkedList(str(resultStr))
+    
+```
+
+연결 리스트를 문자열로 이어 붙인 다음 숫자로 변환하고, 이를 모두 계산한 후 다시 연결 리스트로 바꾸는 풀이.  
+코드가 다소 길지만 어려운 풀이는 아니다. 해당 코드를 시각화하면 아래와 같다.  
+(예제와 같이 l1 = 3 -> 4 -> 2, l2 = 5 -> 6-> 4 로 가정)
+
+![linkedlst1](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/0e20e7bb-fbfa-4436-8e7b-8b9edcc230ef)  
+![linkedlst2](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/5d09d115-b958-40dc-aa8c-c488b293988a)  
+
+<br/>
+
+**2. 전가산기 구현**  
+
+여기서는 논리 회로의 전가산기Full Adder와 유사한 형태를 구현해보자.  
+이진법이 아니라 십진법이라는 차이만 있을 뿐, 자리올림수Carry를 구하는 것까지 가산기의 원리와 거의 동일하다.  
+전가산기의 진리표Truth Table와 회로도는 다음 그림과 같다.  
+![fulladder](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/b5263903-ee9b-4f41-857e-b4fba18d6944)  
+
+여기서는 연산 결과로 나머지Remainder를 취하고 몫Quotient은 자리올림수 형태로 올리는 전가산기의 전체적인 구조만 참고해 풀이해본다.  
+
+```python
+def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+    root = head = ListNode(0)
+
+    carry = 0
+    while l1 or l2 or carry:
+        sum = 0
+        # 두 입력값의 합 계산
+        if l1:
+            sum += l1.val
+            l1 = l1.next
+        if l2:
+            sum += l2.val
+            l2 = l2.next
+        
+        # 몫(자리올림수)과 나머지(값) 계산
+        carry, val = divmod(sum + carry, 10)    # divmod(): 몫(a // b)과 나머지(a % b)로 구성된 튜플 리턴
+        head.next = ListNode(val)
+        head = head.next
+    
+    return root.next
+```
+
+

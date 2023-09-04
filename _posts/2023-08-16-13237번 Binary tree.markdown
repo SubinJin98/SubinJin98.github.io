@@ -16,7 +16,7 @@ use_math: true
 ## ◽ 개요
 ---
 ### 알고리즘 유형
-그래프 이론(Graph)  
+그래프 이론(Graph theory)  
 트리(Tree)  
 깊이 우선 탐색(DFS)  
 
