@@ -1,0 +1,80 @@
+---
+layout: post
+title:  "232. Implement Queue using Stacks"
+excerpt: "LeetCode 232. Implement Queue using Stacks (스택을 이용한 큐 구현)"
+date:   2023-09-18T6:30:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Stack
+    - Design
+    - Queue
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+스택(Stack)  
+디자인(Design)  
+큐(Queue)  
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/implement-queue-using-stacks/>{: target="_blank"}
+<br/>
+
+### Description
+Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (push, peek, pop, and empty).  
+Implement the MyQueue class:  
+- void push(int x) Pushes element x to the back of the queue.  
+- int pop() Removes the element from the front of the queue and returns it.  
+- int peek() Returns the element at the front of the queue.  
+- boolean empty() Returns true if the queue is empty, false otherwise.
+<br/><br/>
+
+## ◽ 풀이
+---
+
+```python
+class MyQueue:
+
+    def __init__(self):
+        self.input = []
+        self.output = []
+        
+
+    def push(self, x: int) -> None:
+        self.input.append(x)
+        
+
+    def pop(self) -> int:
+        self.peek()
+        return self.output.pop()
+        
+
+    def peek(self) -> int:
+        if not self.output:
+            while self.input:
+                self.output.append(self.input.pop())
+        return self.output[-1]
+        
+
+    def empty(self) -> bool:
+        if len(self.input) == 0 and len(self.output) == 0:
+            return True
+        else:
+            return False
+      
+```
+
+![2stack](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/83cff865-f3dd-4540-8201-561c0618fe91)  
+스택 두개 쓰는 방법 기억해두기...  
+
+

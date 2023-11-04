@@ -1,0 +1,101 @@
+---
+layout: post
+title:  "92. Reverse Linked List II"
+excerpt: "LeetCode 92. Reverse Linked List II (역순 연결 리스트 II)"
+date:   2023-09-11T7:04:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Linked List
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+연결 리스트(Linked List)  
+
+
+### 난이도 
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/reverse-linked-list-ii/>{: target="_blank"}
+<br/>
+
+### Description
+Given the head of a singly linked list and two integers left and right where left <= right, reverse the nodes of the list from position left to position right, and return the reversed list.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+인덱스 m에서 n까지를 역순으로 만들어라. 인덱스 m은 1부터 시작한다.  
+
+```python
+class Solution:
+    def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
+        chk = head
+        index = 1
+        rev = None
+
+        while index < left:
+            chk = chk.next
+            index += 1
+        
+        while index >= left and index < right:
+            cur = chk
+            chk = chk.next
+            cur.next = rev
+            rev = cur
+            index += 1
+        
+        while index <= right:
+            chk = chk.next
+            index += 1
+        
+        return head                  
+```
+
+chk와 rev를 어떻게 이어붙일지 아이디어가 필요함
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 반복 구조로 노드 뒤집기**  
+
+```python
+def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+    # 예외 처리
+    if not head or m == n:
+        return head
+    
+    root = start = ListNode(None)
+    root.next(head)
+    # start, end 지정
+    for _ in range(m - 1):
+        start = start.next
+    end = start.next
+
+    # 반복하면서 노드 차례대로 뒤집기
+    for _ in range(n - m):
+        tmp, start.next, end.next = start.next, end.next, end.next.next
+        start.next.next = tmp
+    return root.next
+```
+
+start는 변경이 필요한 위치의 바로 앞 지점을 가리키게 하고 end는 start.next로 지정한다. 그리고 head보다 앞에 root를 만들고, 마지막에 root.next를 최종 결과로 리턴시킨다.  
+이렇게 할당된 start와 end는 끝까지 값이 변하지 않는다. 이를 기준으로 반복하면서 역순으로 뒤집는다.  
+start.next를 tmp로 지정하고, start.next는 end.next가 된다. end.next는 end.next.next로 한 칸 더 앞의 값을 끌어온다.  
+그리고 start.next.next를 tmp로 지정한다. 이전에 start.next였던 노드를 배치하는 것과 동일하다. 이 구조를 계속 반복한다.  
+
+
+

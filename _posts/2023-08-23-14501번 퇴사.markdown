@@ -7,7 +7,7 @@ categories:
     - Coding Test
 tags:
     - Baekjoon
-    - Dinamic Programming
+    - Dynamic Programming
     - Brute-force
 use_math: true
 ---
@@ -15,7 +15,7 @@ use_math: true
 ## ◽ 개요
 ---
 ### 알고리즘 유형
-동적 계획법(Dinamic Programming)  
+동적 계획법(Dynamic Programming)  
 브루트포스 알고리즘(Brute-force)
 
 ### 난이도

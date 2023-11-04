@@ -1,0 +1,66 @@
+---
+layout: post
+title:  "20. Valid Parentheses"
+excerpt: "LeetCode 20. Valid Parentheses (유효한 괄호)"
+date:   2023-09-11T6:50:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - String
+    - Stack
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+문자열(String)  
+스택(Stack)  
+
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/valid-parentheses/>{: target="_blank"}
+<br/>
+
+### Description
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.  
+An input string is valid if:  
+1. Open brackets must be closed by the same type of brackets.  
+2. Open brackets must be closed in the correct order.  
+3. Every close bracket has a corresponding open bracket of the same type.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+괄호로 된 입력값이 올바른지 판별하라.  
+
+```python
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack = []
+        dt = {")": "(", "]": "[", "}": "{"}
+        
+        for i in s:
+            if i not in dt:
+                stack.append(i)
+            elif len(stack) == 0:               # 스택이 비어 있는 케이스 대비
+                return False
+            elif dt[i] != stack.pop():          # dt[i] == stack.pop() return True로 작성할 경우 스택이 비어있는지 여부에 따라 에러남
+                return False
+        return len(stack) == 0                  # return True로 처리할 경우 괄호가 열린 채로 끝나는 케이스 통과 불가
+```
+
+![stack](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/12b185d0-b331-44a0-8d50-09bc5542fd79)
+
+솔직히 어려운 문제는 아니었는데 문제 함정마다 다 걸린 것 같음...  
+교재 풀이도 같은 방식이므로 생략한다.
+
+

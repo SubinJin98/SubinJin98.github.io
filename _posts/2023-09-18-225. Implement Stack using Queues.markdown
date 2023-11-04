@@ -1,0 +1,76 @@
+---
+layout: post
+title:  "225. Implement Stack using Queues"
+excerpt: "LeetCode 225. Implement Stack using Queues (큐를 이용한 스택 구현)"
+date:   2023-09-18T6:12:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Stack
+    - Design
+    - Queue
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+스택(Stack)  
+디자인(Design)  
+큐(Queue)  
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/implement-stack-using-queues/>{: target="_blank"}
+<br/>
+
+### Description
+Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (push, top, pop, and empty).  
+Implement the MyStack class:  
+- void push(int x) Pushes element x to the top of the stack.
+- int pop() Removes the element on the top of the stack and returns it.
+- int top() Returns the element on the top of the stack.
+- boolean empty() Returns true if the stack is empty, false otherwise.
+<br/><br/>
+
+## ◽ 풀이
+---
+
+```python
+class MyStack:
+
+    def __init__(self):
+        self.q = collections.deque()
+        
+
+    def push(self, x: int) -> None:
+        self.q.append(x)
+        for i in range(len(self.q) - 1):
+            self.q.append(self.q.popleft())
+        
+
+    def pop(self) -> int:
+        return self.q.popleft()
+        
+
+    def top(self) -> int:
+        return self.q[0]
+        
+
+    def empty(self) -> bool:
+        return len(self.q) == 0
+      
+```
+
+![193312](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/674780e6-0441-4a78-ba54-0ce4736eaf26)  
+백준 스터디 할 때 접했던 문제  
+백준이랑 리트코드 제출 형태가 달라서 매번 헷갈린다... 그냥 아직 클래스 쓰는 방법을 잘 모르는 것 같기도 함  
+내용 자체는 다 아는 거라 교재 보고 작성 방식 참고했다.
+
+

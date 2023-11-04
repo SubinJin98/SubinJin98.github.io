@@ -1,0 +1,65 @@
+---
+layout: post
+title:  "2670번:: 연속부분최대곱"
+excerpt: "백준 2670번:: 연속부분최대곱 (동적 프로그래밍)"
+date:   2023-09-13T3:25:00Z
+categories:
+    - Coding Test
+tags:
+    - Baekjoon
+    - Dynamic Programming
+    - Brute-force
+use_math: true
+---
+
+## ◽ 개요
+---
+### 알고리즘 유형
+동적 프로그래밍(Dynamic Programming)  
+브루트포스 알고리즘(Brute-force)  
+
+
+### 난이도
+Silver 4
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://www.acmicpc.net/problem/2670>{: target="_blank"}
+
+### 내용
+N개의 실수가 있을 때, 한 개 이상의 연속된 수들의 곱이 최대가 되는 부분을 찾아, 그 곱을 출력하는 프로그램을 작성하시오.  
+예를 들어 아래와 같이 8개의 양의 실수가 주어진다면,  
+
+![Kr2fhViNP7YfNWrhf77jJeXwsd](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/9a88110e-bcd2-4939-aca9-f44553358d13)
+
+색칠된 부분의 곱이 최대가 되며, 그 값은 1.638이다.
+
+<br/>
+
+### 입력
+첫째 줄은 나열된 양의 실수들의 개수 N이 주어지고, 그 다음 줄부터 N개의 수가 한 줄에 하나씩 들어 있다. N은 10,000 이하의 자연수이다. 실수는 소수점 첫째자리까지 주어지며, 0.0보다 크거나 같고, 9.9보다 작거나 같다.  
+
+### 출력
+계산된 최댓값을 소수점 이하 넷째 자리에서 반올림하여 소수점 이하 셋째 자리까지 출력한다.
+<br/><br/><br/>
+
+## ◽ 풀이
+---
+
+아이디어 : 칸을 계속 옮기면서 비교하기..  
+max(현재값*이전값, 현재값) 하면서 값 계속 업데이트  
+
+```python
+n = int(input())
+flt = []
+
+for i in range(n):
+    flt.append(float(input()))
+
+for i in range(1, len(flt)):
+    flt[i] = max((flt[i-1] * flt[i]), flt[i])
+
+print("{:.3f}".format(max(flt)))
+```
+

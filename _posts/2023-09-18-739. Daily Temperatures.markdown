@@ -1,0 +1,111 @@
+---
+layout: post
+title:  "739. Daily Temperatures"
+excerpt: "LeetCode 739. Daily Temperatures (일일 온도)"
+date:   2023-09-18T5:04:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Array
+    - Stack
+    - Monotonic Stack
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+배열(Array)  
+스택(Stack)  
+정렬된 스택(Monotonic Stack)  
+
+### 난이도 
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/daily-temperatures/>{: target="_blank"}
+<br/>
+
+### Description
+Given an array of integers temperatures represents the daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature. If there is no future day for which this is possible, keep answer[i] == 0 instead.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+매일의 화씨 온도 리스트 temperatures를 입력받아서, 더 따뜻한 날씨를 위해서는 며칠을 더 기다려야 하는지를 출력하라.  
+
+- 첫 시도  
+```python
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        res = [0 for _ in range(len(temperatures))]
+
+        for i in range(len(res)):
+            for j in range(i+1, len(res)):
+                if temperatures[j] > temperatures[i]:
+                    res[i] += 1
+                    break
+                elif j >= len(res)-1:
+                    res[i] = 0
+                    break
+                else:
+                    res[i] += 1
+        
+        return res              
+```
+
+이중for문으로 접근해봤다  
+비효율적인건 알지만 가장 간단한 방법  
+
+![tle](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/44d9482b-05f5-4517-92e4-478e34b2b7b9)  
+31번째에서 타임아웃  
+
+- 두 번째 시도  
+```python
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        res = [0 for _ in range(len(temperatures))]
+        stack = []
+
+        for i in range(len(res)):
+            while True:
+                if len(stack) != 0 and temperatures[stack[-1]] < temperatures[i]:
+                    n = stack.pop()
+                    res[n] = i - n
+                else:
+                    stack.append(i)
+                    break
+        
+        return res             
+```
+
+![res](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/fcb1af0c-e3b5-44ec-af17-5ae4012d0e17)
+인덱스를 스택에 넣는다는 아이디어 좀 참고함... 답이 나오긴 했는데 지금 보니 코드 더 효율적으로 짤 수 있었을 것 같다  
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 스택 값 비교**  
+
+```python
+def dailyTemperatures(self, T: List[int]) -> List[int]:
+    answer = [0] * len(T)
+    stack = []
+    for i, cur in enumerate(T):
+        # 현재 온도가 스택 값보다 높다면 정답 처리
+        while stack and cur > T[stack[-1]]:
+            last = stack.pop()
+            answer[last] = i - last
+        stack.append(i)
+```
+
+
