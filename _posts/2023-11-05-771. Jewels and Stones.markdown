@@ -1,0 +1,132 @@
+---
+layout: post
+title:  "771. Jewels and Stones"
+excerpt: "LeetCode 771. Jewels and Stones (보석과 돌)"
+date:   2023-11-05T1:38:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - String
+    - Hash Table
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+문자열(String)  
+해시 테이블(Hash Table)  
+
+### 난이도 
+Easy
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/jewels-and-stones/>{: target="_blank"}
+<br/>
+
+### Description
+You're given strings jewels representing the types of stones that are jewels, and stones representing the stones you have.  
+Each character in stones is a type of stone you have. You want to know how many of the stones you have are also jewels.  
+Letters are case sensitive, so "a" is considered a different type of stone from "A".
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+
+```python
+class Solution:
+    def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        jewel_dict = {}
+        ans = 0
+        
+        for i in jewels:
+            jewel_dict[i] = 0
+        
+        for j in stones:
+            if j in jewel_dict:
+                jewel_dict[j] += 1
+        
+        for k in jewel_dict.values():
+            ans += k
+        
+        return ans       
+```
+
+![res](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/95353a1b-253e-4733-9da2-54f67980acad)
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. 해시 테이블을 이용한 풀이**   
+
+```python
+def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        freqs = {}
+        count = 0
+        
+        # 돌(S)의 빈도 수 계산
+        for char in stones:
+            if char not in freqs:
+                freqs[char] = 1
+            else:
+                freqs[char] += 1
+        
+        # 보석(J)의 빈도 수 합산
+        for char in jewels:
+            if char in freqs:
+                count += freqs[char]
+        
+        return count
+```
+<br/>
+
+**2. defaultdict를 이용한 비교 생략**   
+
+```python
+def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        freqs = collections.defaultdict(int)
+        count = 0
+        
+        # 비교 없이 돌(S) 빈도 수 계산
+        for char in stones:
+            freqs[char] += 1
+        
+        # 비교 없이 보석(J) 빈도 수 합산
+        for char in jewels:
+            count += freqs[char]
+        
+        return count
+```
+<br/>
+
+**3. Counter로 계산 생략**   
+
+```python
+def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        freqs = collections.Counter(stones) # 돌(S) 빈도 수 계산
+        # Counter는 존재하지 않는 키의 경우 0을 출력함
+        count = 0
+        
+        # 비교 없이 보석(J) 빈도 수 합산
+        for char in jewels:
+            count += freqs[char]
+        
+        return count
+```
+<br/>
+
+**4. 파이썬다운 방식**   
+
+```python
+def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        return sum(s in jewels for s in stones)
+```
