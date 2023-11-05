@@ -18,8 +18,8 @@ use_math: true
 ---
 ### Related Topics
 배열(Array)  
-해시 테이블(Hash Table)
-연결 리스트(Linked List)
+해시 테이블(Hash Table)  
+연결 리스트(Linked List)  
 
 ### 난이도 
 Easy
