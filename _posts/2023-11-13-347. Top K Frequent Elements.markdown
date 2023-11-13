@@ -1,0 +1,106 @@
+---
+layout: post
+title:  "347. Top K Frequent Elements"
+excerpt: "LeetCode 347. Top K Frequent Elements (상위 K 빈도 요소)"
+date:   2023-11-013T1:42:00Z
+categories:
+    - Coding Test
+tags:
+    - LeetCode
+    - Array
+    - Hash Table
+    - Sorting
+use_math: true
+
+---
+
+## ◽ 개요
+---
+### Related Topics
+배열(Array)  
+해시 테이블(Hash Table)  
+정렬(Sorting)  
+
+### 난이도 
+Medium
+<br/><br/>
+
+## ◽ 문제
+---
+> <https://leetcode.com/problems/top-k-frequent-elements/>{: target="_blank"}
+<br/>
+
+### Description
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+<br/><br/>
+
+## ◽ 풀이
+---
+### 내 풀이
+
+```python
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        ans = {}
+        lst = []
+        
+        for i in nums:
+            try:
+                ans[i] += 1
+            except:
+                ans[i] = 1
+
+        for key, value in ans.items():
+            lst.append([key, value])
+        
+        lst.sort(key= lambda x: -x[1])
+        
+        ans_lst = []
+
+        for i in range(k):
+            ans_lst.append(lst[i][0])
+        
+        return ans_lst
+```
+
+![res](https://github.com/SubinJin98/SubinJin98.github.io/assets/116137904/e5258c99-e2d3-4615-b685-169b6de5f858)  
+
+메모리를 많이 쓴다는 자각이 있긴 했는데... 한계였다
+
+<br/>
+
+---
+### 다른 풀이
+아래 내용은 '파이썬 알고리즘 인터뷰' 책을 참고했다.  
+<br/>
+
+**1. Counter를 이용한 음수 순 추출**   
+
+```python
+def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+    freqs = collections.Counter(nums)                 # 빈도 수 추출
+    freqs_heap = []
+    # 힙에 음수로 삽입
+    for f in freqs:
+        heapq.heappush(freqs_heap, (-freqs[f], f))    # 키와 값 바꿔서 힙에 추가
+    
+    topk = list()
+    # k번만큼 추출, 최소 힙(Min Heap)이므로 가장 작은 음수 순으로 추출
+
+    for _ in range(k):
+        topk.append(heapq.heappop(freqs_heap)[1])     # 최소값이 튀어나옴
+    
+    return topk
+```
+<br/>
+
+**2. 파이썬다운 방식**   
+
+```python
+def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+    return list(zip(*collections.Counter(nums).most_common(k)))[0]
+    # Counter는 most_common이라는, 빈도 수가 높은 순서대로 아이템을 추출하는 기능을 제공함
+    # zip 함수: 2개 이상의 시퀀스를 짧은 길이 기준으로 일대일 대응, 튜플 시퀀스로 반환
+    # 아스테리스크(*): 시퀀스 언패킹 연산자. 주로 튜플이나 리스트를 언패킹할 때 사용함
+```
+
